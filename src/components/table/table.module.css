@@ -1,0 +1,33 @@
+.table {
+  border-collapse: collapse;
+  box-shadow: 0px 1px 2px 0px #00000033;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  overflow: hidden;
+  background-color: #fff;
+
+  tbody {
+    border: 1px solid #f0f0f0;
+
+    tr td {
+      padding: 16px 32px;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+  }
+}
+
+.thead {
+  background-color: var(--blue-primary);
+  border: 1px solid #f0f0f0;
+
+  th {
+    padding: 16px 32px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 100%;
+    text-align: left;
+    text-transform: uppercase;
+  }
+}
