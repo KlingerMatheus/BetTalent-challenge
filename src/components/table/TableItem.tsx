@@ -1,4 +1,4 @@
-import { formatPhone } from "../utils";
+import { formatDate, formatPhone } from "../utils";
 
 interface UserProps {
   user?: User;
@@ -10,11 +10,11 @@ const TableItem = ({ user }: UserProps) => {
   return (
     <tr>
       <td>
-        <img src={user?.photo} alt={user?.name} />
+        <img width={45} height={45} src={user?.image} alt={user?.name} />
       </td>
       <td>{user?.name}</td>
-      <td>{user?.role}</td>
-      <td>{user?.startDate}</td>
+      <td>{user?.job}</td>
+      <td>{formatDate(user?.admission_date)}</td>
       <td>{formatPhone(user.phone)}</td>
     </tr>
   );
