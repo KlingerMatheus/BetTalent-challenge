@@ -3,6 +3,7 @@ import { Navbar } from "./components/header/Navbar";
 import { Table } from "./components/table";
 
 import "./App.css";
+import { useEffect, useMemo, useState } from "react";
 
 function App() {
   const tableColumns = [
@@ -13,50 +14,32 @@ function App() {
     "Telefone",
   ];
 
-  const mockUsers: User[] = [
-    {
-      name: "Klinger",
-      phone: "11950437900",
-      role: "Frontend",
-      startDate: "10091999",
-      photo: "/",
-    },
-    {
-      name: "Maria Silva",
-      phone: "11987654321",
-      role: "Backend",
-      startDate: "15032005",
-      photo: "/maria.jpg",
-    },
-    {
-      name: "João Pereira",
-      phone: "21912345678",
-      role: "Designer",
-      startDate: "22112010",
-      photo: "/joao.png",
-    },
-    {
-      name: "Ana Rodrigues",
-      phone: "31998765432",
-      role: "QA",
-      startDate: "05072018",
-      photo: "/ana.jpeg",
-    },
-    {
-      name: "Pedro Santos",
-      phone: "41987654321",
-      role: "DevOps",
-      startDate: "12012022",
-      photo: "/pedro.gif",
-    },
-    {
-      name: "Lucas Oliveira",
-      phone: "51912345678",
-      role: "Fullstack",
-      startDate: "30082015",
-      photo: "/lucas.svg",
-    },
-  ];
+  const [employees, setEmployees] = useState<User[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const foundEmployees = employees.filter((employee) =>
+    employee.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/employees");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const json = await response.json();
+      setEmployees(json);
+    } catch (err) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -65,18 +48,29 @@ function App() {
         <div className="head">
           <h1>Funcionários</h1>
           <div className="search-wrapper">
-            <input type="search" placeholder="Pesquisar" />
+            <input
+              onChange={(e) => setSearch(e.target.value)}
+              type="search"
+              placeholder="Pesquisar"
+            />
             <SearchIcon height={24} color="#DFDFDF" />
           </div>
         </div>
-        <Table.Container>
-          <Table.Head columns={tableColumns} />
-          <tbody>
-            {mockUsers.map((user) => (
-              <Table.Item user={user} />
-            ))}
-          </tbody>
-        </Table.Container>
+
+        {foundEmployees && (
+          <Table.Container>
+            <Table.Head columns={tableColumns} />
+            <tbody>
+              {foundEmployees.map((employee) => (
+                <Table.Item key={employee.id} user={employee} />
+              ))}
+            </tbody>
+          </Table.Container>
+        )}
+
+        {isLoading && "Carregando..."}
+        {error}
+        {foundEmployees.length === 0 && "Nenhum funcionário foi encontrado"}
       </main>
     </>
   );
